@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Kanit", serif;
+    user-select: none;
+}
+
+body{
+    background-color: purple;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+}
+
+.card-contain{
+    text-align: center;
+    color: white;
+}
+
+.card{
+    border: 5px solid white;
+    font-size: 25px;
+    border-radius: 25px;
+    padding: 1rem;
+    margin: .5rem;
+    color: black;
+    background-color: white;
+    text-align: center;
+    width: 150px;
+    transition: all ease 0.1s;
+}
+
+.card:hover{
+    color: white;
+    background-color: purple;
+}
+
+.center{
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#button-con{
+    display: grid;
+    grid-template-columns: 1fr;
+    
+}
+
+.word{
+    text-align: center;
+    height: 50px;
+    border: 1px solid white;
+    width: 500px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+#button-con button{
+    font-size: 20px;
+    padding: 0 50px;
+}
+
+.red-border {
+    background-color: gold;
+    color: brown;
+    border: 5px solid gold;
+}
