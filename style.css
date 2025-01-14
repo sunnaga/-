@@ -8,6 +8,8 @@
 
 body{
     background-color: purple;
+    height: 100vh;
+    border: 10px solid purple;
 }
 
 .container{
@@ -23,7 +25,7 @@ body{
 }
 
 .card{
-    border: 5px solid white;
+    border: 5px solid purple;
     font-size: 25px;
     border-radius: 25px;
     padding: 1rem;
@@ -72,4 +74,13 @@ body{
     background-color: gold;
     color: brown;
     border: 5px solid gold;
+}
+
+.turn{
+    background-color: rgba(255, 0, 255, 0.5);
+    border-radius: 50px;
+}
+
+.hurt{
+    border: 10px solid red;
 }

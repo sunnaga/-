@@ -8,10 +8,13 @@ let PSBTN = document.getElementById('PSbutton')
 let CHBTN = document.getElementById('CHbutton')
 let ENBTN = document.getElementById('ENbutton')
 
+let cardContainer1 = document.getElementById('card-contain1')
+let cardContainer2 = document.getElementById('card-contain2')
 
 let my_hand = []
 let enemy_hand = []
 
+let turn = true
 
 function update_deck() {
     deck_display.innerHTML = 'ไพ่ที่ยังคงเหลือ : ' + deck.length
@@ -20,11 +23,11 @@ function update_deck() {
  * Add cards to deck
  * just add cards to the deck
  */
-let TH = ['พาย', 'เพิง', 'โค่น', 'บ่วง', 'เถา', 'ฉุด', 'ดอน', 'คบไฟ', 'งอกงาม', 'แหนง', 'เหวียง', 'เหย้า', 'ไผท', 'Thai']
-let KM = ['กัน', 'กระดาน', 'กระจอก', 'ผสม', 'กระท่อม', 'สงบ', 'เจริญ', 'ขจี', 'ประจาน', 'เผด็จ', 'ถนน', 'สนุก', 'สรร', 'Khmer']
-let PS = ['ปริศนา', 'ราชา', 'ชาติ', 'ศีล', 'สุข', 'สัตว์', 'ธรรม', 'วิทยา', 'ปัจจัย', 'กวี', 'นาค', 'จิต', 'ชล', 'PaliSanskrit']
-let CH = ['เจ๊ก', 'เก๊ก', 'ตะหลิว', 'ตุน', 'เจ', 'เข่ง', 'เก้าอี้', 'ก๋วยเตี๋ยว', 'โต๊ะ', 'ก๊ก', 'ก๊ง', 'เก๊', 'เจ๊ง', 'Chinese']
-let EN = ['ฟุตบอล', 'คอมพิวเตอร์', 'ปลั๊ก', 'เมาส์', 'คัตเอาท์', 'เกม', 'กีต้าร์', 'แท๊กซี่', 'เว็บไซต์', 'คอนเท้นต์', 'ชาร์จ', 'แก๊ส', 'แฮคเกอร์', 'English']
+let TH = ['พาย', 'โค่น', 'บ่วง', 'เถา', 'ฉุด', 'ดอน', 'งอกงาม', 'แหนง', 'เหวียง', 'เหย้า', 'Thai']
+let KM = ['กระดาน', 'กระจอก', 'กระท่อม', 'สงบ', 'เจริญ', 'ขจี', 'ประจาน', 'เผด็จ', 'ถนน', 'สนุก', 'Khmer']
+let PS = ['ปริศนา', 'ราชา', 'ชาติ', 'ศีล', 'ธรรม', 'วิทยา', 'ปัจจัย', 'กวี', 'นาค', 'จิต', 'PaliSanskrit']
+let CH = ['เจ๊ก', 'เก๊ก', 'ตะหลิว', 'ตุน', 'เจ', 'เข่ง', 'เก้าอี้', 'ก๋วยเตี๋ยว', 'โต๊ะ', 'เจ๊ง', 'Chinese']
+let EN = ['คอมพิวเตอร์', 'ปลั๊ก', 'เมาส์', 'คัตเอาท์', 'เกม', 'กีต้าร์', 'แท๊กซี่', 'เว็บไซต์', 'คอนเท้นต์', 'ชาร์จ', 'English']
 
 let cards = [TH, KM, PS, CH, EN]
 
@@ -127,58 +130,174 @@ function random_card_from_deck_for_enemy() {
  * SELECT CARD
  * for play
  */
+let arr = []
+let arr2 = []
 
 container.addEventListener('click', (event) => {
-    if (event.target.classList.contains('card')) {
-        event.target.classList.toggle('red-border')
+    if (turn == true) {
+        if (event.target.classList.contains('me')) {
+            event.target.classList.toggle('red-border')
+        }
     }
+    if (turn == false) {
+        if (event.target.classList.contains('enemy')) {
+            event.target.classList.toggle('red-border')
+        }
+    }
+
 })
 
 /**
  * SUBMIT CARD
  */
-function submitCard(value) {
 
+let convertScore = {
+    'Thai': 3,
+    'Khmer': 3,
+    'PaliSanskrit': 3,
+    'Chinese': 2,
+    'English': 1
+}
+
+let myScoreDisplay = document.getElementById('my_score')
+let enemyScoreDisplay = document.getElementById('enemy_score')
+
+let player1_Score = 0
+let player2_Score = 0
+
+
+function submitCard(value) {
     let card_from_doc = document.querySelectorAll('.card')
+
+    arr = []
+    arr2 = []
 
     card_from_doc.forEach((card) => {
         let mycardindex = my_hand.findIndex(c => c.id == card.id)
         let enemycardindex = enemy_hand.findIndex(c => c.id == card.id)
-        if (card.classList.contains('red-border') && (my_hand[mycardindex].type == value)) {
-            if (card.classList.contains('me')) {
-                let index = my_hand.findIndex(c => c.id == card.id)
 
-                my_hand.splice(index, 1)
-                card.remove()
-                console.log(index)
-                if (deck.length != 0) {
-                    random_card_from_deck_for_me()
-                }
-            }
-            else if (card.classList.contains('enemy')) {
-                let index = my_hand.findIndex(c => c.id == card.id)
-
-                enemy_hand.splice(index, 1)
-                card.remove()
-                console.log(index)
-                if (deck.length != 0) {
-                    random_card_from_deck_for_enemy()
-                }
-            }
-
+        if (card.classList.contains('me') && card.classList.contains('red-border')) {
+            arr.push(my_hand[mycardindex].type)
         }
-    })
+        if (card.classList.contains('red-border') && card.classList.contains('enemy')) {
+            arr2.push(enemy_hand[enemycardindex].type)
+        }
+
+
+        console.log(arr + " is ARRAY")
+        /**
+         * จะทำarrayไว้ ลูปใส่ใบที่เลือกลง arr แล้วเอาไปเช๊ค
+         * 
+         */
+
+    });
+    // เช๊คว่าเหมือนกันไหม
+    console.log(arr)
+    console.log(arr2)
+
+    if (arr.every(element => element === arr[0])) {
+        card_from_doc.forEach((card) => {
+            let mycardindex = my_hand.findIndex(c => c.id == card.id)
+
+            if (card.classList.contains('red-border')) {
+                if (card.classList.contains('me') && my_hand[mycardindex].type == value) {
+
+                    player1_Score += convertScore[value]
+                    my_hand.splice(mycardindex, 1)
+                    card.remove()
+                    if (deck.length != 0) {
+                        random_card_from_deck_for_me()
+                    }
+                }
+                else if (card.classList.contains('me') && my_hand[mycardindex].type != value) {
+                    card.classList.remove('red-border')
+                    hurtBlink()
+                }
+            }
+        })
+    }
+    else if (arr.some(element => element !== arr[0])) {
+        card_from_doc.forEach((card) => {
+            card.classList.remove('red-border')
+            hurtBlink()
+        })
+    }
+    // else if(arr.length == 1){
+    //     card_from_doc.forEach((card) => {
+    //         card.classList.remove('red-border')
+    //         hurtBlink()
+    //     })
+    // }
+        
+    
+    //********************************************* */
+    if (arr2.every(element => element === arr2[0])) {
+        card_from_doc.forEach((card) => {
+            let enemycardindex = enemy_hand.findIndex(c => c.id == card.id)
+
+            if (card.classList.contains('red-border')) {
+
+                if (card.classList.contains('enemy') && enemy_hand[enemycardindex].type == value) {
+
+                    player2_Score += convertScore[value]
+                    enemy_hand.splice(enemycardindex, 1)
+                    card.remove()
+                    if (deck.length != 0) {
+                        random_card_from_deck_for_enemy()
+                    }
+                }
+                else if (card.classList.contains('enemy') && enemy_hand[enemycardindex].type != value) {
+                    card.classList.remove('red-border')
+                    hurtBlink()
+                }
+
+            }
+        })
+    }
+    else if (arr2.some(element => element !== arr2[0])) {
+        card_from_doc.forEach((card) => {
+            card.classList.remove('red-border')
+            hurtBlink()
+        })
+    }
+
+
+
+
+    myScoreDisplay.innerHTML = 'คะแนน : ' + player1_Score
+    enemyScoreDisplay.innerHTML = 'คะแนน : ' + player2_Score
+
+    turn = !turn
+    swapTurn()
 };
+let card_from_doc_out = document.querySelectorAll('.card')
+function swapTurn() {
+    // card_from_doc_out.forEach((card)=>{
+    //     card.classList.remove('red-border')
+    //     alert(card.innerHTML)
+    // })
+    if (turn == true) {
+        cardContainer2.classList.remove('turn')
+        cardContainer1.classList.add('turn')
+    }
+    else if (turn == false) {
+        cardContainer1.classList.remove('turn')
+        cardContainer2.classList.add('turn')
+    }
+}
 
+let body = document.querySelector('body')
 
-// button.addEventListener('click', () => {})
+function hurtBlink() {
 
-// container.addEventListener('click', (event)=>{
-//     if(event.target.classList.contains('card')){
+    body.classList.add('hurt')
+    setTimeout(() => {
+        body.classList.remove('hurt')
+    }, 100)
 
-//     }
-// })
+}
 
+swapTurn()
 random_card_from_deck_for_enemy()
 random_card_from_deck_for_me()
 
